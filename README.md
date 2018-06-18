@@ -4,13 +4,13 @@
 
 If you want to use the post-Windows Vista modern File Open, File Save and Folder Browser dialogs then you need to use the Shell COM API, and deal with all the Shell COM interfaces and types.
 
-This is handled for you by the Microsoft Windows API Code Pack - you'll need both Microsoft.WindowsAPICodePack.dll and Microsoft.WindowsAPICodePack.Shell.dll - combined are 632KB, they also haven't been kept up-to-date by Microsoft, so the latest packages on NuGet are not by Microsoft. It also provides more functionality than you probably need.
+This is handled for you by the Microsoft Windows API Code Pack - you'll need both Microsoft.WindowsAPICodePack.dll and Microsoft.WindowsAPICodePack.Shell.dll - combined are **632KB**, they also haven't been kept up-to-date by Microsoft, so the latest packages on NuGet are not by Microsoft. It also provides more functionality than you probably need.
 
-Whereas this assembly is only 32KB and will only be about the shell dialogs - not any of the new shell and platform features.
+Whereas this assembly is only 32KB and will only be about the shell dialogs - not any of the new shell and platform features. You can also copy + paste the raw files into your own projects.
 
 ## Usage
 
-The API is intentionally simple:
+The API is intentionally simple. It can be safely used from any context: Console, WPF, or WinForms. The `ShowDialog` methods all accept an `IntPtr hWnd` of the parent window. You can also specify `IntPtr.Zero` when there is no parent window.
 
 ### Folder Browser Dialog
 
@@ -24,3 +24,10 @@ The API is intentionally simple:
 		Console.WriteLine( selection );
 	}
 	
+### File Open Dialog
+
+(TODO)
+
+### File Save Dialog
+
+(TODO)
