@@ -14,7 +14,7 @@ The API is intentionally simple. It can be safely used from any context: Console
 
 ### Folder Browser Dialog
 
-    String selection = FolderBrowserDialog.ShowDialog( IntPtr.Zero, "Title", null );
+	String selection = FolderBrowserDialog.ShowDialog( IntPtr.Zero, "Title", null );
 	if( selection == null )
 	{
 		// Dialog cancelled
@@ -26,8 +26,53 @@ The API is intentionally simple. It can be safely used from any context: Console
 	
 ### File Open Dialog
 
-(TODO)
+#### Single files
+
+	Filter[] filters = new Filter[]
+	{
+		new Filter( "Images", "gif", "png", "jpg", "jpeg", "heic", "webp" ),
+		new Filter( "Videos", "mov", "wmv", "mp4", "mpeg", "mpg", "avi", "webm" ),
+		new Filter( "Audio" , "mp3", "wma", "wav", "aac" ),
+		new Filter( "All files" , "*" ),
+	};
+
+	String selection = FileOpenDialog.ShowSingleSelectDialog( IntPtr.Zero, "Title", initialDirectory: null, defaultFileName: null, filters: filters );
+	if( selection == null )
+	{
+		// Dialog cancelled
+	}
+	else
+	{
+		Console.WriteLine( selection );
+	}
+
+#### Multiple files
+
+	// The Filter class can parse WinForms filters:
+	Filter[] filters = Filter.ParseWindowsFormsFilter( @"Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF|All files (*.*)|*.*" );
+	
+	String[] fileNames = FileOpenDialog.ShowMultiSelectDialog( IntPtr.Zero, "Title", initialDirectory: null, defaultFileName: null, filters: filters );
+	if( selection == null )
+	{
+		// Dialog cancelled
+	}
+	else
+	{
+		foreach( String fileName in fileNames ) Console.WriteLine( fileName );
+	}
 
 ### File Save Dialog
 
-(TODO)
+	String fileName = FileSaveDialog.ShowDialog( IntPtr.Zero, "Title", initialDirectory: null, defaultFileName: null, filters: filters );
+	if( fileName == null )
+	{
+		// Dialog cancelled
+	}
+	else
+	{
+		Console.WriteLine( "Save file dialog. Selected file: \"{0}\".", fileName );
+	}
+
+## Feedback and Suggestions
+
+Please post to the GitHub project issues page: https://github.com/Jehoel/ShellFileDialogs/issues

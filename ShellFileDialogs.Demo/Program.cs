@@ -44,6 +44,26 @@ namespace ShellFileDialogs.Demo
 				}
 			}
 
+			// FileOpenDialog
+			{
+				const String windowsFormsFilter = @"Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF|All files (*.*)|*.*"; // from https://msdn.microsoft.com/en-us/library/system.windows.forms.filedialog.filter(v=vs.110).aspx
+				Filter[] filters = Filter.ParseWindowsFormsFilter( windowsFormsFilter );
+
+				String[] fileNames = FileOpenDialog.ShowMultiSelectDialog( IntPtr.Zero, "Title", @"C:\Users\David\Music", defaultFileName: null, filters: filters, selectedFilterIndex: 2 );
+				if( fileNames != null )
+				{
+					Console.WriteLine( "Open file dialog. Selected files:" );
+					foreach( String fileName in fileNames )
+					{
+						Console.WriteLine( fileName );
+					}
+				}
+				else
+				{
+					Console.WriteLine( "Open file dialog. Cancelled." );
+				}
+			}
+
 			// FileSaveDialog
 			{
 				Filter[] filters = new Filter[]

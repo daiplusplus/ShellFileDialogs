@@ -45,6 +45,7 @@
     <Compile Include="Native\Enums.cs" />
     <Compile Include="Native\FileOpenDialogRCW.cs" />
     <Compile Include="Native\FileSaveDialogRCW.cs" />
+    <Compile Include="Native\Filter.cs" />
     <Compile Include="Native\FilterSpec.cs" />
     <Compile Include="Native\Identifiers.cs" />
     <Compile Include="Native\IEnumIdList.cs" />
