@@ -10,18 +10,20 @@ namespace ShellFileDialogs
 #pragma warning disable 0108
 
 	[ComImport(),
-    Guid(ShellIIDGuid.IFileOpenDialog),
+    Guid(ShellIIDGuid.IFileSaveDialog),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    internal interface IFileOpenDialog : IFileDialog
+    internal interface IFileSaveDialog : IFileDialog
     {
         // Defined on IModalWindow - repeated here due to requirements of COM interop layer.
-        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        [PreserveSig]
+        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime),
+        PreserveSig]
         HResult Show([In] IntPtr parent);
 
         // Defined on IFileDialog - repeated here due to requirements of COM interop layer.
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetFileTypes([In] uint cFileTypes, [In] ref FilterSpec rgFilterSpec);
+        void SetFileTypes(
+            [In] uint cFileTypes,
+            [In] ref FilterSpec rgFilterSpec);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void SetFileTypeIndex([In] uint iFileType);
@@ -74,7 +76,9 @@ namespace ShellFileDialogs
         void GetResult([MarshalAs(UnmanagedType.Interface)] out IShellItem ppsi);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void AddPlace([In, MarshalAs(UnmanagedType.Interface)] IShellItem psi, FileDialogAddPlacement fdap);
+        void AddPlace(
+            [In, MarshalAs(UnmanagedType.Interface)] IShellItem psi,
+            FileDialogAddPlacement fdap);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void SetDefaultExtension([In, MarshalAs(UnmanagedType.LPWStr)] string pszDefaultExtension);
@@ -92,12 +96,32 @@ namespace ShellFileDialogs
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void SetFilter([MarshalAs(UnmanagedType.Interface)] IntPtr pFilter);
 
-        // Defined by IFileOpenDialog.
-        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void GetResults([MarshalAs(UnmanagedType.Interface)] out IShellItemArray ppenum);
+        // Defined by IFileSaveDialog interface.
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void GetSelectedItems([MarshalAs(UnmanagedType.Interface)] out IShellItemArray ppsai);
+        void SetSaveAsItem([In, MarshalAs(UnmanagedType.Interface)] IShellItem psi);
+
+        // Not currently supported: IPropertyStore.
+        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        void SetProperties([In, MarshalAs(UnmanagedType.Interface)] IntPtr pStore);
+
+        [PreserveSig]
+        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        int SetCollectedProperties(
+            [In] IPropertyDescriptionList pList,
+            [In] bool fAppendDefault);
+
+        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        [PreserveSig]
+        HResult GetProperties(out IPropertyStore ppStore);
+
+        // Not currently supported: IPropertyStore, IFileOperationProgressSink.
+        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        void ApplyProperties(
+            [In, MarshalAs(UnmanagedType.Interface)] IShellItem psi,
+            [In, MarshalAs(UnmanagedType.Interface)] IntPtr pStore,
+            [In, ComAliasName("ShellObjects.wireHWND")] ref IntPtr hwnd,
+            [In, MarshalAs(UnmanagedType.Interface)] IntPtr pSink);
     }
 
 #pragma warning restore 0108

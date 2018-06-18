@@ -81,6 +81,7 @@ namespace ShellFileDialogs
 	[Flags]
     internal enum FileOpenOptions
     {
+		None = 0,
         OverwritePrompt = 0x00000002,
         StrictFileTypes = 0x00000004,
         NoChangeDirectory = 0x00000008,

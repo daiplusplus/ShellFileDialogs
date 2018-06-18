@@ -6,7 +6,7 @@ namespace ShellFileDialogs
 	internal static class ShellNativeMethods
 	{
 		[DllImport( "shell32.dll", CharSet = CharSet.Unicode, SetLastError = true )]
-		internal static extern int SHCreateItemFromParsingName(
+		internal static extern HResult SHCreateItemFromParsingName(
 			[MarshalAs( UnmanagedType.LPWStr )] string path,
 			// The following parameter is not used - binding context.
 			IntPtr pbc,
