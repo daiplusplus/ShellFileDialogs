@@ -9,9 +9,9 @@ namespace ShellFileDialogs
 	// the exception of those already declared in "IUnknown"
 #pragma warning disable 0108
 
-	[ComImport(),
-    Guid(ShellIIDGuid.IFileOpenDialog),
-    InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+	[ComImport]
+    [Guid(ShellIIDGuid.IFileOpenDialog)]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IFileOpenDialog : IFileDialog
     {
         // Defined on IModalWindow - repeated here due to requirements of COM interop layer.

@@ -25,12 +25,21 @@ namespace ShellFileDialogs
             [In] ref Guid riid,
             out IntPtr ppv);
 
+#if PROPERTIES
         [PreserveSig]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult GetPropertyDescriptionList(
             [In] ref PropertyKey keyType,
             [In] ref Guid riid,
             out IntPtr ppv);
+#else
+		[PreserveSig]
+        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        HResult GetPropertyDescriptionList(
+            [In] IntPtr keyType,
+            [In] ref Guid riid,
+            out IntPtr ppv);
+#endif
 
         [PreserveSig]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]

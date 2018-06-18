@@ -105,15 +105,27 @@ namespace ShellFileDialogs
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void SetProperties([In, MarshalAs(UnmanagedType.Interface)] IntPtr pStore);
 
+#if PROPERTIES
         [PreserveSig]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         int SetCollectedProperties(
             [In] IPropertyDescriptionList pList,
             [In] bool fAppendDefault);
 
-        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+		[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         [PreserveSig]
         HResult GetProperties(out IPropertyStore ppStore);
+#else
+		[PreserveSig]
+        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        int SetCollectedProperties(
+            [In] IntPtr pList,
+            [In] bool fAppendDefault);
+
+		[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        [PreserveSig]
+        HResult GetProperties(out IntPtr ppStore);
+#endif
 
         // Not currently supported: IPropertyStore, IFileOperationProgressSink.
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]

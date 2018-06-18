@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if PROPERTIES
+
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -56,3 +58,4 @@ namespace ShellFileDialogs
         HResult Commit();
     }
 }
+#endif

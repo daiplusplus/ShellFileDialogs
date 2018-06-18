@@ -43,17 +43,8 @@ namespace ShellFileDialogs
             [In] uint hint,
             out int piOrder);
 
-        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime), PreserveSig]
-        int GetPropertyStore(
-            [In] GetPropertyStoreOptions Flags,
-            [In] ref Guid riid,
-            [Out, MarshalAs(UnmanagedType.Interface)] out IPropertyStore ppv);
-
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetPropertyStoreWithCreateObject([In] GetPropertyStoreOptions Flags, [In, MarshalAs(UnmanagedType.IUnknown)] object punkCreateObject, [In] ref Guid riid, out IntPtr ppv);
-
-        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void GetPropertyStoreForKeys([In] ref PropertyKey rgKeys, [In] uint cKeys, [In] GetPropertyStoreOptions Flags, [In] ref Guid riid, [Out, MarshalAs(UnmanagedType.IUnknown)] out IPropertyStore ppv);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetPropertyDescriptionList([In] ref PropertyKey keyType, [In] ref Guid riid, out IntPtr ppv);
@@ -61,8 +52,31 @@ namespace ShellFileDialogs
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult Update([In, MarshalAs(UnmanagedType.Interface)] IBindCtx pbc);
 
+#if PROPERTIES
+		[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime), PreserveSig]
+        int GetPropertyStore(
+            [In] GetPropertyStoreOptions Flags,
+            [In] ref Guid riid,
+            [Out, MarshalAs(UnmanagedType.Interface)] out IPropertyStore ppv);
+
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetProperty([In] ref PropertyKey key, [Out] PropVariant ppropvar);
+
+		[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        void GetPropertyStoreForKeys([In] ref PropertyKey rgKeys, [In] uint cKeys, [In] GetPropertyStoreOptions Flags, [In] ref Guid riid, [Out, MarshalAs(UnmanagedType.IUnknown)] out IPropertyStore ppv);
+#else
+		[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime), PreserveSig]
+        int GetPropertyStore(
+            [In] GetPropertyStoreOptions Flags,
+            [In] ref Guid riid,
+            [Out, MarshalAs(UnmanagedType.Interface)] out IntPtr ppv);
+
+        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        void GetProperty([In] ref PropertyKey key, [Out] IntPtr ppropvar);
+
+		[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        void GetPropertyStoreForKeys([In] ref PropertyKey rgKeys, [In] uint cKeys, [In] GetPropertyStoreOptions Flags, [In] ref Guid riid, [Out, MarshalAs(UnmanagedType.IUnknown)] out IntPtr ppv);
+#endif
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetCLSID([In] ref PropertyKey key, out Guid pclsid);

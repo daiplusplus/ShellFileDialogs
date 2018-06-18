@@ -1,4 +1,6 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿#if PROPERTIES
+
+//Copyright (c) Microsoft Corporation.  All rights reserved.
 
 using System;
 using System.Runtime.InteropServices;
@@ -104,3 +106,4 @@ namespace ShellFileDialogs
         internal static extern void InitPropVariantFromStringVector([In, Out] string[] prgsz, uint cElems, [Out] PropVariant ppropvar);
     }
 }
+#endif

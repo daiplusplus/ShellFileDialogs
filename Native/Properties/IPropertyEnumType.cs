@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if PROPERTIES
+
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -25,3 +27,4 @@ namespace ShellFileDialogs
         void GetDisplayText([Out, MarshalAs(UnmanagedType.LPWStr)] out string ppszDisplay);
     }
 }
+#endif

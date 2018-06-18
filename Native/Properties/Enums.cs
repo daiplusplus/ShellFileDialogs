@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if PROPERTIES
+
+using System;
 
 namespace ShellFileDialogs
 {
@@ -744,3 +746,4 @@ namespace ShellFileDialogs
         MaskAll = 0x000003ff,
     }
 }
+#endif

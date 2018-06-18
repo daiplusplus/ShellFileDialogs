@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if PROPERTIES
+
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -15,3 +17,4 @@ namespace ShellFileDialogs
         void GetAt([In] uint iElem, [In] ref Guid riid, [MarshalAs(UnmanagedType.Interface)] out IPropertyDescription ppv);
     }
 }
+#endif

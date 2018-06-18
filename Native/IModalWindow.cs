@@ -4,9 +4,9 @@ using System.Runtime.InteropServices;
 
 namespace ShellFileDialogs
 {
-	[ComImport(),
-    Guid(ShellIIDGuid.IModalWindow),
-    InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+	[ComImport]
+    [Guid(ShellIIDGuid.IModalWindow)]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IModalWindow
     {
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime),

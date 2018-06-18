@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#if PROPERTIES
+
+using System;
 using System.Runtime.InteropServices;
 
 namespace ShellFileDialogs
@@ -145,3 +147,4 @@ namespace ShellFileDialogs
         #endregion
     }
 }
+//#endif
