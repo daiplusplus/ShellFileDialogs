@@ -8,16 +8,16 @@ namespace ShellFileDialogs
 	{
 		/// <summary>Shows the file open dialog for multiple filename selections. Returns null if the dialog cancelled. Otherwise returns all selected paths.</summary>
 		/// <param name="selectedFilterIndex">0-based index of the filter to select.</param>
-		public static String[] ShowMultiSelectDialog(IntPtr parentHWnd, String title, String initialDirectory, String defaultFileName, ICollection<Filter> filters, Int32 selectedFilterIndex)
+		public static String[] ShowMultiSelectDialog(IntPtr parentHWnd, String title, String initialDirectory, String defaultFileName, IReadOnlyCollection<Filter> filters, Int32 selectedFilterZeroBasedIndex)
 		{
-			return ShowDialog( parentHWnd, title, initialDirectory, defaultFileName, filters, selectedFilterIndex, FileOpenOptions.AllowMultiSelect );
+			return ShowDialog( parentHWnd, title, initialDirectory, defaultFileName, filters, selectedFilterZeroBasedIndex, FileOpenOptions.AllowMultiSelect );
 		}
 
 		/// <summary>Shows the file open dialog for a single filename selection. Returns null if the dialog cancelled. Otherwise returns the selected path.</summary>
 		/// <param name="selectedFilterIndex">0-based index of the filter to select.</param>
-		public static String ShowSingleSelectDialog(IntPtr parentHWnd, String title, String initialDirectory, String defaultFileName, ICollection<Filter> filters, Int32 selectedFilterIndex)
+		public static String ShowSingleSelectDialog(IntPtr parentHWnd, String title, String initialDirectory, String defaultFileName, IReadOnlyCollection<Filter> filters, Int32 selectedFilterZeroBasedIndex)
 		{
-			String[] fileNames = ShowDialog( parentHWnd, title, initialDirectory, defaultFileName, filters, selectedFilterIndex, FileOpenOptions.None );
+			String[] fileNames = ShowDialog( parentHWnd, title, initialDirectory, defaultFileName, filters, selectedFilterZeroBasedIndex, FileOpenOptions.None );
 			if( fileNames != null && fileNames.Length > 0 )
 			{
 				return fileNames[0];
@@ -28,12 +28,12 @@ namespace ShellFileDialogs
 			}
 		}
 
-		private static String[] ShowDialog(IntPtr parentHWnd, String title, String initialDirectory, String defaultFileName, ICollection<Filter> filters, Int32 selectedFilterIndex, FileOpenOptions flags)
+		private static String[] ShowDialog(IntPtr parentHWnd, String title, String initialDirectory, String defaultFileName, IReadOnlyCollection<Filter> filters, Int32 selectedFilterZeroBasedIndex, FileOpenOptions flags)
 		{
 			NativeFileOpenDialog nfod = new NativeFileOpenDialog();
 			try
 			{
-				return ShowDialogInner( nfod, parentHWnd, title, initialDirectory, defaultFileName, filters, selectedFilterIndex, flags );
+				return ShowDialogInner( nfod, parentHWnd, title, initialDirectory, defaultFileName, filters, selectedFilterZeroBasedIndex, flags );
 			}
 			finally
 			{
@@ -41,7 +41,7 @@ namespace ShellFileDialogs
 			}
 		}
 
-		private static String[] ShowDialogInner(IFileOpenDialog dialog, IntPtr parentHWnd, String title, String initialDirectory, String defaultFileName, ICollection<Filter> filters, Int32 selectedFilterIndex, FileOpenOptions flags)
+		private static String[] ShowDialogInner(IFileOpenDialog dialog, IntPtr parentHWnd, String title, String initialDirectory, String defaultFileName, IReadOnlyCollection<Filter> filters, Int32 selectedFilterZeroBasedIndex, FileOpenOptions flags)
 		{
 			flags = flags |
 				FileOpenOptions.NoTestFileCreate |
@@ -69,16 +69,7 @@ namespace ShellFileDialogs
 				dialog.SetFileName( defaultFileName );
 			}
 
-			if( filters != null && filters.Count > 0 )
-			{
-				FilterSpec[] specs = Utility.CreateFilterSpec( filters );
-				dialog.SetFileTypes( (UInt32)specs.Length, specs );
-			}
-
-			if( selectedFilterIndex > -1 )
-			{
-				dialog.SetFileTypeIndex( 1 + (UInt32)selectedFilterIndex ); // Indexes are 1-based, not 0-based.
-			}
+			Utility.SetFilters( dialog, filters, selectedFilterZeroBasedIndex );
 
 			HResult result = dialog.Show( parentHWnd );
 

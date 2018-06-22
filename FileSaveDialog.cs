@@ -7,7 +7,7 @@ namespace ShellFileDialogs
 	public static class FileSaveDialog
 	{
 		/// <param name="selectedFilterIndex">0-based index of the filter to select.</param>
-		public static String ShowDialog(IntPtr parentHWnd, String title, String initialDirectory, String defaultFileName, ICollection<Filter> filters, Int32 selectedFilterIndex = -1)
+		public static String ShowDialog(IntPtr parentHWnd, String title, String initialDirectory, String defaultFileName, IReadOnlyCollection<Filter> filters, Int32 selectedFilterZeroBasedIndex = -1)
 		{
 			NativeFileSaveDialog nfod = new NativeFileSaveDialog();
 			try
@@ -20,7 +20,7 @@ namespace ShellFileDialogs
 			}
 		}
 
-		private static String ShowDialogInner(IFileSaveDialog dialog, IntPtr parentHWnd, String title, String initialDirectory, String defaultFileName, ICollection<Filter> filters, Int32 selectedFilterIndex = -1)
+		private static String ShowDialogInner(IFileSaveDialog dialog, IntPtr parentHWnd, String title, String initialDirectory, String defaultFileName, IReadOnlyCollection<Filter> filters, Int32 selectedFilterZeroBasedIndex = -1)
 		{
 			FileOpenOptions flags =
 				FileOpenOptions.NoTestFileCreate |
@@ -58,16 +58,7 @@ namespace ShellFileDialogs
 				dialog.SetFileName( defaultFileName );
 			}
 
-			if( filters != null && filters.Count > 0 )
-			{
-				FilterSpec[] specs = Utility.CreateFilterSpec( filters );
-				dialog.SetFileTypes( (UInt32)specs.Length, specs );
-			}
-
-			if( selectedFilterIndex > -1 )
-			{
-				dialog.SetFileTypeIndex( 1 + (UInt32)selectedFilterIndex );
-			}
+			Utility.SetFilters( dialog, filters, selectedFilterZeroBasedIndex );
 
 			HResult result = dialog.Show( parentHWnd );
 

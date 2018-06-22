@@ -29,7 +29,7 @@ namespace ShellFileDialogs.Demo
 					new Filter( "All files" , "*" ),
 				};
 
-				String[] fileNames = FileOpenDialog.ShowMultiSelectDialog( IntPtr.Zero, "Title", @"C:\Users\David\Music", defaultFileName: null, filters: filters, selectedFilterIndex: 2 );
+				String[] fileNames = FileOpenDialog.ShowMultiSelectDialog( IntPtr.Zero, "Title", @"C:\Users\David\Music", defaultFileName: null, filters: filters, selectedFilterZeroBasedIndex: 2 );
 				if( fileNames != null )
 				{
 					Console.WriteLine( "Open file dialog. Selected files:" );
@@ -49,7 +49,7 @@ namespace ShellFileDialogs.Demo
 				const String windowsFormsFilter = @"Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF|All files (*.*)|*.*"; // from https://msdn.microsoft.com/en-us/library/system.windows.forms.filedialog.filter(v=vs.110).aspx
 				Filter[] filters = Filter.ParseWindowsFormsFilter( windowsFormsFilter );
 
-				String[] fileNames = FileOpenDialog.ShowMultiSelectDialog( IntPtr.Zero, "Title", @"C:\Users\David\Music", defaultFileName: null, filters: filters, selectedFilterIndex: 2 );
+				String[] fileNames = FileOpenDialog.ShowMultiSelectDialog( IntPtr.Zero, "Title", @"C:\Users\David\Music", defaultFileName: null, filters: filters, selectedFilterZeroBasedIndex: 2 );
 				if( fileNames != null )
 				{
 					Console.WriteLine( "Open file dialog. Selected files:" );
@@ -77,7 +77,7 @@ namespace ShellFileDialogs.Demo
 				String initialDirectory = @"C:\Users\David\Music\Aerosmith\2006 - The Very Best Of\";
 				String defaultFileName  = /*initialDirectory +*/ @"12 - Aerosmith - Dream On.mp3";
 
-				String fileName = FileSaveDialog.ShowDialog( IntPtr.Zero, "Title", initialDirectory, defaultFileName, filters, selectedFilterIndex: 2 );
+				String fileName = FileSaveDialog.ShowDialog( IntPtr.Zero, "Title", initialDirectory, defaultFileName, filters, selectedFilterZeroBasedIndex: 2 );
 				if( fileName != null )
 				{
 					Console.WriteLine( "Save file dialog. Selected file: \"{0}\".", fileName );

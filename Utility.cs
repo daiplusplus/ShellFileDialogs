@@ -77,7 +77,20 @@ namespace ShellFileDialogs
 			return result;
 		}
 
-		public static FilterSpec[] CreateFilterSpec(ICollection<Filter> filters)
+		public static void SetFilters(IFileDialog dialog, IReadOnlyCollection<Filter> filters, Int32 selectedFilterZeroBasedIndex)
+		{
+			if( filters == null || filters.Count == 0 ) return;
+
+			FilterSpec[] specs = Utility.CreateFilterSpec( filters );
+			dialog.SetFileTypes( (UInt32)specs.Length, specs );
+
+			if( selectedFilterZeroBasedIndex > -1 && selectedFilterZeroBasedIndex < filters.Count )
+			{
+				dialog.SetFileTypeIndex( 1 + (UInt32)selectedFilterZeroBasedIndex ); // In the COM interface (like the other Windows OFD APIs), filter indexes are 1-based, not 0-based.
+			}
+		}
+
+		public static FilterSpec[] CreateFilterSpec(IReadOnlyCollection<Filter> filters)
 		{
 			FilterSpec[] specs = new FilterSpec[ filters.Count ];
 			Int32 i = 0;
