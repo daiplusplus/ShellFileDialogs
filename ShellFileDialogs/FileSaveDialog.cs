@@ -1,13 +1,16 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.InteropServices;
 
 namespace ShellFileDialogs
 {
 	public static class FileSaveDialog
 	{
-		/// <param name="selectedFilterIndex">0-based index of the filter to select.</param>
-		public static String ShowDialog(IntPtr parentHWnd, String title, String initialDirectory, String defaultFileName, IReadOnlyCollection<Filter> filters, Int32 selectedFilterZeroBasedIndex = -1)
+		/// <summary>Shows the file-save dialog. Returns <see langword="null"/> if the user canceled the dialog - otherwise returns the user-selected path.</summary>
+		/// <param name="selectedFilterZeroBasedIndex">0-based index of the filter to select. Use <c>-1</c> to indicate no default selection.</param>
+		public static String? ShowDialog(IntPtr parentHWnd, String? title, String? initialDirectory, String? defaultFileName, IReadOnlyCollection<Filter>? filters, Int32 selectedFilterZeroBasedIndex = -1)
 		{
 			NativeFileSaveDialog nfod = new NativeFileSaveDialog();
 			try
@@ -16,11 +19,11 @@ namespace ShellFileDialogs
 			}
 			finally
 			{
-				Marshal.ReleaseComObject( nfod );
+				_ = Marshal.ReleaseComObject( nfod );
 			}
 		}
 
-		private static String ShowDialogInner(IFileSaveDialog dialog, IntPtr parentHWnd, String title, String initialDirectory, String defaultFileName, IReadOnlyCollection<Filter> filters, Int32 selectedFilterZeroBasedIndex = -1)
+		private static String? ShowDialogInner(IFileSaveDialog dialog, IntPtr parentHWnd, String? title, String? initialDirectory, String? defaultFileName, IReadOnlyCollection<Filter>? filters, Int32 selectedFilterZeroBasedIndex = -1)
 		{
 			FileOpenOptions flags =
 				FileOpenOptions.NoTestFileCreate |
@@ -37,7 +40,7 @@ namespace ShellFileDialogs
 
 			if( initialDirectory != null )
 			{
-				IShellItem2 initialDirectoryShellItem = Utility.ParseShellItem2Name( initialDirectory );
+				IShellItem2? initialDirectoryShellItem = Utility.ParseShellItem2Name( initialDirectory );
 				if( initialDirectoryShellItem != null )
 				{
 					dialog.SetFolder( initialDirectoryShellItem );

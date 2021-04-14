@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -6,19 +6,19 @@ namespace ShellFileDialogs
 {
 	public static class FileOpenDialog
 	{
-		/// <summary>Shows the file open dialog for multiple filename selections. Returns null if the dialog cancelled. Otherwise returns all selected paths.</summary>
-		/// <param name="selectedFilterIndex">0-based index of the filter to select.</param>
-		public static String[] ShowMultiSelectDialog(IntPtr parentHWnd, String title, String initialDirectory, String defaultFileName, IReadOnlyCollection<Filter> filters, Int32 selectedFilterZeroBasedIndex)
+		/// <summary>Shows the file open dialog for multiple filename selections. Returns <see langword="null"/> if the user cancelled the dialog, otherwise returns all selected paths.</summary>
+		/// <param name="selectedFilterZeroBasedIndex">0-based index of the filter to select.</param>
+		public static IReadOnlyList<String>? ShowMultiSelectDialog(IntPtr parentHWnd, String? title, String? initialDirectory, String? defaultFileName, IReadOnlyCollection<Filter> filters, Int32? selectedFilterZeroBasedIndex)
 		{
 			return ShowDialog( parentHWnd, title, initialDirectory, defaultFileName, filters, selectedFilterZeroBasedIndex, FileOpenOptions.AllowMultiSelect );
 		}
 
-		/// <summary>Shows the file open dialog for a single filename selection. Returns null if the dialog cancelled. Otherwise returns the selected path.</summary>
-		/// <param name="selectedFilterIndex">0-based index of the filter to select.</param>
-		public static String ShowSingleSelectDialog(IntPtr parentHWnd, String title, String initialDirectory, String defaultFileName, IReadOnlyCollection<Filter> filters, Int32 selectedFilterZeroBasedIndex)
+		/// <summary>Shows the file open dialog for a single filename selection. Returns <see langword="null"/> if the user cancelled the dialog, otherwise returns the selected path.</summary>
+		/// <param name="selectedFilterZeroBasedIndex">0-based index of the filter to select.</param>
+		public static String? ShowSingleSelectDialog(IntPtr parentHWnd, String? title, String? initialDirectory, String? defaultFileName, IReadOnlyCollection<Filter>? filters, Int32? selectedFilterZeroBasedIndex)
 		{
-			String[] fileNames = ShowDialog( parentHWnd, title, initialDirectory, defaultFileName, filters, selectedFilterZeroBasedIndex, FileOpenOptions.None );
-			if( fileNames != null && fileNames.Length > 0 )
+			IReadOnlyList<String>? fileNames = ShowDialog( parentHWnd, title, initialDirectory, defaultFileName, filters, selectedFilterZeroBasedIndex, FileOpenOptions.None );
+			if( fileNames != null && fileNames.Count > 0 )
 			{
 				return fileNames[0];
 			}
@@ -28,20 +28,20 @@ namespace ShellFileDialogs
 			}
 		}
 
-		private static String[] ShowDialog(IntPtr parentHWnd, String title, String initialDirectory, String defaultFileName, IReadOnlyCollection<Filter> filters, Int32 selectedFilterZeroBasedIndex, FileOpenOptions flags)
+		private static IReadOnlyList<String>? ShowDialog(IntPtr parentHWnd, String? title, String? initialDirectory, String? defaultFileName, IReadOnlyCollection<Filter>? filters, Int32? selectedFilterZeroBasedIndex, FileOpenOptions flags)
 		{
 			NativeFileOpenDialog nfod = new NativeFileOpenDialog();
 			try
 			{
-				return ShowDialogInner( nfod, parentHWnd, title, initialDirectory, defaultFileName, filters, selectedFilterZeroBasedIndex, flags );
+				return ShowDialogInner( nfod, parentHWnd, title, initialDirectory, defaultFileName, filters, selectedFilterZeroBasedIndex: selectedFilterZeroBasedIndex ?? (-1), flags );
 			}
 			finally
 			{
-				Marshal.ReleaseComObject( nfod );
+				_ = Marshal.ReleaseComObject( nfod );
 			}
 		}
 
-		private static String[] ShowDialogInner(IFileOpenDialog dialog, IntPtr parentHWnd, String title, String initialDirectory, String defaultFileName, IReadOnlyCollection<Filter> filters, Int32 selectedFilterZeroBasedIndex, FileOpenOptions flags)
+		private static IReadOnlyList<String>? ShowDialogInner(IFileOpenDialog dialog, IntPtr parentHWnd, String? title, String? initialDirectory, String? defaultFileName, IReadOnlyCollection<Filter>? filters, Int32 selectedFilterZeroBasedIndex, FileOpenOptions flags)
 		{
 			flags = flags |
 				FileOpenOptions.NoTestFileCreate |
@@ -57,7 +57,7 @@ namespace ShellFileDialogs
 
 			if( initialDirectory != null )
 			{
-				IShellItem2 initialDirectoryShellItem = Utility.ParseShellItem2Name( initialDirectory );
+				IShellItem2? initialDirectoryShellItem = Utility.ParseShellItem2Name( initialDirectory );
 				if( initialDirectoryShellItem != null )
 				{
 					dialog.SetFolder( initialDirectoryShellItem );

@@ -1,12 +1,13 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace ShellFileDialogs
 {
 	public static class FolderBrowserDialog
 	{
-		/// <summary>Shows the folder browser dialog. Returns null if the dialog cancelled. Otherwise returns the selected path.</summary>
-		public static String ShowDialog(IntPtr parentHWnd, String title, String initialDirectory)
+		/// <summary>Shows the folder browser dialog. Returns <see langword="null"/> if the user cancelled the dialog. Otherwise returns the selected path.</summary>
+		public static String? ShowDialog(IntPtr parentHWnd, String? title, String? initialDirectory)
 		{
 			NativeFileOpenDialog nfod = new NativeFileOpenDialog();
 			try
@@ -15,11 +16,11 @@ namespace ShellFileDialogs
 			}
 			finally
 			{
-				Marshal.ReleaseComObject( nfod );
+				_ = Marshal.ReleaseComObject( nfod );
 			}
 		}
 
-		private static String ShowDialogInner(IFileOpenDialog dialog, IntPtr parentHWnd, String title, String initialDirectory)
+		private static String? ShowDialogInner(IFileOpenDialog dialog, IntPtr parentHWnd, String? title, String? initialDirectory)
 		{
 			//IFileDialog ifd = dialog;
 			FileOpenOptions flags =
@@ -37,7 +38,7 @@ namespace ShellFileDialogs
 
 			if( initialDirectory != null )
 			{
-				IShellItem2 initialDirectoryShellItem = Utility.ParseShellItem2Name( initialDirectory );
+				IShellItem2? initialDirectoryShellItem = Utility.ParseShellItem2Name( initialDirectory );
 				if( initialDirectoryShellItem != null )
 				{
 					dialog.SetFolder( initialDirectoryShellItem );

@@ -4,6 +4,7 @@
 		<TargetFrameworks>net48;netcoreapp3.1;</TargetFrameworks>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<IncludeSymbols>true</IncludeSymbols>
+		<LangVersion>8.0</LangVersion>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<!-- https://stackoverflow.com/a/48391188/159145 include-pdb-files-into-my-nuget-nupkg-files -->
 		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
@@ -13,6 +14,9 @@
 		<Authors>Dai Rees</Authors>
 		<SignAssembly>true</SignAssembly>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<Nullable>enable</Nullable>
+		<AssemblyOriginatorKeyFile>StrongName256.pfx</AssemblyOriginatorKeyFile>
+		<Version>1.1.0</Version>
     </PropertyGroup>
 	
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -22,5 +26,10 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Folder Include="Dialogs\" />
+	  <Folder Include="Filters\" />
+	</ItemGroup>
 	
 </Project>

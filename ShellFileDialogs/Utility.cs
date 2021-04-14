@@ -1,38 +1,46 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.InteropServices;
 
 namespace ShellFileDialogs
 {
 	internal static class Utility
 	{
-		public static String[] GetFileNames(IShellItemArray items)
+		public static IReadOnlyList<String> GetFileNames(IShellItemArray items)
 		{
-			UInt32 count;
-			HResult hresult = items.GetCount( out count );
-			if( hresult != HResult.Ok ) throw new Exception( "IShellItemArray.GetCount failed. HResult: " + hresult ); // TODO: Will this ever happen?
-
-			String[] fileNames = new String[ count ];
-
-			for( int i = 0; i < count; i++ )
+			HResult hresult = items.GetCount( out UInt32 count );
+			if( hresult != HResult.Ok )
 			{
-				IShellItem shellItem = Utility.GetShellItemAt( items, i );
-				String fileName = Utility.GetFileNameFromShellItem( shellItem );
-
-				fileNames[i] = fileName;
+				throw new Exception( "IShellItemArray.GetCount failed. HResult: " + hresult ); // TODO: Will this ever happen?
 			}
+			else
+			{
+				List<String> list = new List<String>( capacity: (Int32)count );
 
-			return fileNames;
+				for( int i = 0; i < count; i++ )
+				{
+					IShellItem? shellItem = Utility.GetShellItemAt( items, i );
+
+					String? fileName = Utility.GetFileNameFromShellItem( shellItem );
+					if( fileName != null )
+					{
+						list.Add( fileName );
+					}
+				}
+
+				return list;
+			}
 		}
 
-		private static readonly Guid _ishellItem2Guid = new Guid(ShellIIDGuid.IShellItem2);
+		private static readonly Guid _ishellItem2Guid = new Guid( ShellIIDGuid.IShellItem2 );
 
-		public static IShellItem2 ParseShellItem2Name( String value )
+		public static IShellItem2? ParseShellItem2Name( String value )
 		{
 			Guid ishellItem2GuidCopy = _ishellItem2Guid;
 
-			IShellItem2 shellItem;
-			HResult hresult = ShellNativeMethods.SHCreateItemFromParsingName( value, IntPtr.Zero, ref ishellItem2GuidCopy, out shellItem );
+			HResult hresult = ShellNativeMethods.SHCreateItemFromParsingName( value, IntPtr.Zero, ref ishellItem2GuidCopy, out IShellItem2 shellItem );
 			if( hresult == HResult.Ok )
 			{
 				return shellItem;

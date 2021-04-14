@@ -7,9 +7,11 @@ namespace ShellFileDialogs
 {
 	public class Filter
 	{
-		private static readonly Char[] _extensionTrimStart = new Char[] { ' ', '.', ';' };
+		private static readonly Char[] _semiColon = new Char[] { ';' };
+		private static readonly Char[] _pipe      = new Char[] { '|' };
 
-		private static readonly Char[] _extensionTrim = new Char[] { ' ', '.', ';', '*', '\\', '/', '?' };
+		private static readonly Char[] _extensionTrimStart = new Char[] { ' ', '.', ';' };
+		private static readonly Char[] _extensionTrim      = new Char[] { ' ', '.', ';', '*', '\\', '/', '?' };
 
 		public Filter(String displayName, params String[] extensions)
 			: this( displayName, (IEnumerable<String>)extensions )
@@ -35,13 +37,13 @@ namespace ShellFileDialogs
 		public String DisplayName { get; }
 		public IReadOnlyList<String> Extensions { get; }
 
-		/// <summary>Returns null if the string couldn't be parsed.</summary>
-		public static Filter[] ParseWindowsFormsFilter(String filter)
+		/// <summary>Returns <see langword="null"/> if the string couldn't be parsed.</summary>
+		public static IReadOnlyList<Filter>? ParseWindowsFormsFilter(String filter)
 		{
 			// https://msdn.microsoft.com/en-us/library/system.windows.forms.filedialog.filter(v=vs.110).aspx
 			if( String.IsNullOrWhiteSpace( filter ) ) return null;
 
-			String[] components = filter.Split( new Char[] { '|' }, StringSplitOptions.RemoveEmptyEntries );
+			String[] components = filter.Split( _pipe, StringSplitOptions.RemoveEmptyEntries );
 			if( components.Length % 2 != 0 ) return null;
 
 			Filter[] filters = new Filter[ components.Length / 2 ];
@@ -51,7 +53,7 @@ namespace ShellFileDialogs
 				String displayName   = components[i];
 				String extensionsCat = components[i+1];
 
-				String[] extensions = extensionsCat.Split( new Char[] { ';' }, StringSplitOptions.RemoveEmptyEntries );
+				String[] extensions = extensionsCat.Split( _semiColon, StringSplitOptions.RemoveEmptyEntries );
 
 				filters[fi] = new Filter( displayName, extensions );
 				fi++;
@@ -66,11 +68,11 @@ namespace ShellFileDialogs
 			Boolean first = true;
 			foreach( String extension in this.Extensions )
 			{
-				if( !first ) sb.Append( ';' );
+				if( !first ) _ = sb.Append( ';' );
 				first = false;
 
-				sb.Append( "*." );
-				sb.Append( extension );
+				_ = sb.Append( "*." );
+				_ = sb.Append( extension );
 			}
 
 			return sb.ToString();
@@ -81,21 +83,23 @@ namespace ShellFileDialogs
 			Boolean first = true;
 			foreach( String extension in this.Extensions )
 			{
-				if( !first ) sb.Append( ", " );
+				if( !first ) _ = sb.Append( ", " );
 				first = false;
 
-				sb.Append( "*." );
-				sb.Append( extension );
+				_ = sb.Append( "*." );
+				_ = sb.Append( extension );
 			}
 		}
 
 		public override String ToString()
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.Append( this.DisplayName );
-			sb.Append( " (" );
+			_ = sb.Append( this.DisplayName );
+			
+			_ = sb.Append( " (" );
 			this.ToExtensionList( sb );
-			sb.Append( ")" );
+			_ = sb.Append( ')' );
+
 			return sb.ToString();
 		}
 
