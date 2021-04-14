@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -60,21 +60,12 @@ namespace ShellFileDialogs
 
 			Utility.SetFilters( dialog, filters, selectedFilterZeroBasedIndex );
 
-			HResult result = dialog.Show( parentHWnd );
+			//
 
-			HResult cancelledAsHResult = Utility.HResultFromWin32( (int)HResult.Win32ErrorCanceled );
-			if( result == cancelledAsHResult )
+			HResult hr = dialog.Show( parentHWnd );
+			if( hr.ValidateDialogShowHResult() )
 			{
-				// Cancelled
-				return null;
-			}
-			else
-			{
-				// OK
-
-				IShellItem selectedItem;
-				dialog.GetResult( out selectedItem );
-
+				dialog.GetResult( out IShellItem selectedItem );
 				if( selectedItem != null )
 				{
 					return Utility.GetFileNameFromShellItem( selectedItem );
@@ -83,6 +74,11 @@ namespace ShellFileDialogs
 				{
 					return null;
 				}
+			}
+			else
+			{
+				// User cancelled.
+				return null;
 			}
 		}
 	}

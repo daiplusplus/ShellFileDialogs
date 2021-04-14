@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -71,23 +71,20 @@ namespace ShellFileDialogs
 
 			Utility.SetFilters( dialog, filters, selectedFilterZeroBasedIndex );
 
-			HResult result = dialog.Show( parentHWnd );
+			//
 
-			HResult cancelledAsHResult = Utility.HResultFromWin32( (int)HResult.Win32ErrorCanceled );
-			if( result == cancelledAsHResult )
+			HResult hr = dialog.Show( parentHWnd );
+			if( hr.ValidateDialogShowHResult() )
 			{
-				// Cancelled
-				return null;
+				dialog.GetResults( out IShellItemArray resultsArray );
+
+				IReadOnlyList<String> fileNames = Utility.GetFileNames( resultsArray );
+				return fileNames;
 			}
 			else
 			{
-				// OK
-
-				IShellItemArray resultsArray;
-				dialog.GetResults( out resultsArray );
-
-				String[] fileNames = Utility.GetFileNames( resultsArray );
-				return fileNames;
+				// User cancelled.
+				return null;
 			}
 		}
 	}

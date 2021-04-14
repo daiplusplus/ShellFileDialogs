@@ -9,8 +9,8 @@ namespace ShellFileDialogs
 	[InterfaceType( ComInterfaceType.InterfaceIsIUnknown )]
 	internal interface IModalWindow
 	{
-		[MethodImpl( MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime ),
-		PreserveSig]
+		[MethodImpl( MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime )]
+		[PreserveSig]
 		HResult Show([In] IntPtr parent);
 	}
 }

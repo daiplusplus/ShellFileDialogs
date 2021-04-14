@@ -10,100 +10,86 @@ namespace ShellFileDialogs
 		SICHINT_ALLFIELDS = unchecked((int)0x80000000)
 	}
 
-	internal enum HResult
+	/// <summary>Note: these are *not* HResult codes. But Win32 errors can be converted to HResults!</summary>
+	/// <remarks>See https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/18d8fbe8-a967-4f1c-ae50-99ca8e491d2d
+	/// &quot;All Win32 error codes MUST be in the range 0x0000 to 0xFFFF, although Win32 error codes can be used both in 16-bit fields (such as within the HRESULT type specified in section 2.1) as well as 32-bit fields.&quot;
+	/// </remarks>
+	internal enum Win32ErrorCodes : UInt16
 	{
-		/// <summary>     
-		/// S_OK          
-		/// </summary>    
+		/// <summary><c>ERROR_SUCCESS = 0x0000 == 0</c></summary>
+		Success = 0,
+		
+		/// <summary><c>ERROR_CANCELLED = 0x000004C7 == 1223</c></summary>
+		ErrorCancelled = 1223,
+	}
+
+	/// <summary>Remember that HRESULT values are actually 32-bit packed structures which *encapsulate* 16-bit Win32 error codes - and other error codes. Use the methods in <see cref="HResults"/> to correctly inspect a <see cref="HResult"/> value.</summary>
+	internal enum HResult : UInt32
+	{
+		/// <summary>S_OK</summary>    
 		Ok = 0x0000,
 
-		/// <summary>
-		/// S_FALSE
-		/// </summary>        
-		False = 0x0001,
+//		/// <summary>S_FALSE</summary> 
+//		/// <remarks>Why on earth is <c>1</c> being used to represent <c>false</c>?!?</remarks>
+//		False = 0x0001,
 
-		/// <summary>
-		/// E_INVALIDARG
-		/// </summary>
-		InvalidArguments = unchecked((int)0x80070057),
+		/// <summary>E_INVALIDARG</summary>
+		InvalidArguments = 0x80070057,
 
-		/// <summary>
-		/// E_OUTOFMEMORY
-		/// </summary>
-		OutOfMemory = unchecked((int)0x8007000E),
+		/// <summary>E_OUTOFMEMORY</summary>
+		OutOfMemory = 0x8007000E,
 
-		/// <summary>
-		/// E_NOINTERFACE
-		/// </summary>
-		NoInterface = unchecked((int)0x80004002),
+		/// <summary>E_NOINTERFACE</summary>
+		NoInterface = 0x80004002,
 
-		/// <summary>
-		/// E_FAIL
-		/// </summary>
-		Fail = unchecked((int)0x80004005),
+		/// <summary>E_FAIL</summary>
+		Fail = 0x80004005,
 
-		/// <summary>
-		/// E_ELEMENTNOTFOUND
-		/// </summary>
-		ElementNotFound = unchecked((int)0x80070490),
+		/// <summary>E_ELEMENTNOTFOUND</summary>
+		ElementNotFound =0x80070490,
 
-		/// <summary>
-		/// TYPE_E_ELEMENTNOTFOUND
-		/// </summary>
-		TypeElementNotFound = unchecked((int)0x8002802B),
+		/// <summary>TYPE_E_ELEMENTNOTFOUND</summary>
+		TypeElementNotFound = 0x8002802B,
 
-		/// <summary>
-		/// NO_OBJECT
-		/// </summary>
-		NoObject = unchecked((int)0x800401E5),
+		/// <summary>NO_OBJECT</summary>
+		NoObject = 0x800401E5,
 
-		/// <summary>
-		/// Win32 Error code: ERROR_CANCELLED
-		/// </summary>
-		Win32ErrorCanceled = 1223,
+		/// <summary>ERROR_CANCELLED</summary>
+		Canceled = 0x800704C7,
 
-		/// <summary>
-		/// ERROR_CANCELLED
-		/// </summary>
-		Canceled = unchecked((int)0x800704C7),
+		/// <summary>The requested resource is in use</summary>
+		ResourceInUse = 0x800700AA,
 
-		/// <summary>
-		/// The requested resource is in use
-		/// </summary>
-		ResourceInUse = unchecked((int)0x800700AA),
-
-		/// <summary>
-		/// The requested resources is read-only.
-		/// </summary>
-		AccessDenied = unchecked((int)0x80030005)
+		/// <summary>The requested resources is read-only.</summary>
+		AccessDenied = 0x80030005
 	}
 
 	[Flags]
 	internal enum FileOpenOptions
 	{
-		None = 0,
-		OverwritePrompt = 0x00000002,
-		StrictFileTypes = 0x00000004,
-		NoChangeDirectory = 0x00000008,
-		PickFolders = 0x00000020,
+		None               = 0,
+		OverwritePrompt    = 0x00000002,
+		StrictFileTypes    = 0x00000004,
+		NoChangeDirectory  = 0x00000008,
+		PickFolders        = 0x00000020,
 		// Ensure that items returned are filesystem items.
-		ForceFilesystem = 0x00000040,
+		ForceFilesystem    = 0x00000040,
 		// Allow choosing items that have no storage.
 		AllNonStorageItems = 0x00000080,
-		NoValidate = 0x00000100,
-		AllowMultiSelect = 0x00000200,
-		PathMustExist = 0x00000800,
-		FileMustExist = 0x00001000,
-		CreatePrompt = 0x00002000,
-		ShareAware = 0x00004000,
-		NoReadOnlyReturn = 0x00008000,
-		NoTestFileCreate = 0x00010000,
-		HideMruPlaces = 0x00020000,
-		HidePinnedPlaces = 0x00040000,
+		NoValidate         = 0x00000100,
+		AllowMultiSelect   = 0x00000200,
+		PathMustExist      = 0x00000800,
+		FileMustExist      = 0x00001000,
+		CreatePrompt       = 0x00002000,
+		ShareAware         = 0x00004000,
+		NoReadOnlyReturn   = 0x00008000,
+		NoTestFileCreate   = 0x00010000,
+		HideMruPlaces      = 0x00020000,
+		HidePinnedPlaces   = 0x00040000,
 		NoDereferenceLinks = 0x00100000,
-		DontAddToRecent = 0x02000000,
-		ForceShowHidden = 0x10000000,
-		DefaultNoMiniMode = 0x20000000
+		DontAddToRecent    = 0x02000000,
+		ForceShowHidden    = 0x10000000,
+		DefaultNoMiniMode  = 0x20000000
 	}
 
 	/// <summary>

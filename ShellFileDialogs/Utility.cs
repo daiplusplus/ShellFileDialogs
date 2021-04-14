@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -44,41 +44,50 @@ namespace ShellFileDialogs
 			}
 		}
 
-		public static HResult HResultFromWin32(int win32ErrorCode)
+		public static String? GetFileNameFromShellItem(IShellItem? item)
 		{
-			const int FacilityWin32 = 7;
-
-			if( win32ErrorCode > 0 )
+			if( item is null )
 			{
-				win32ErrorCode = (int)( ( (uint)win32ErrorCode & 0x0000FFFF ) | ( FacilityWin32 << 16 ) | 0x80000000 );
+				return null;
 			}
-			return (HResult)win32ErrorCode;
-
+			else
+			{
+				HResult hr = item.GetDisplayName( ShellItemDesignNameOptions.DesktopAbsoluteParsing, out IntPtr pszString );
+				if( hr == HResult.Ok && pszString != IntPtr.Zero )
+				{
+					String fileName = Marshal.PtrToStringAuto( pszString )!; // `PtrToStringAuto` won't return `null` if its `ptr` argument is not null, which we check for.
+					Marshal.FreeCoTaskMem( pszString );
+					return fileName;
+				}
+				else
+				{
+					return null;
+				}
+			}
 		}
 
-		public static String GetFileNameFromShellItem(IShellItem item)
+		public static IShellItem? GetShellItemAt(IShellItemArray array, int i)
 		{
-			string filename = null;
-			IntPtr pszString = IntPtr.Zero;
-			HResult hr = item.GetDisplayName( ShellItemDesignNameOptions.DesktopAbsoluteParsing, out pszString );
-			if( hr == HResult.Ok && pszString != IntPtr.Zero )
-			{
-				filename = Marshal.PtrToStringAuto( pszString );
-				Marshal.FreeCoTaskMem( pszString );
-			}
-			return filename;
-		}
-
-		public static IShellItem GetShellItemAt(IShellItemArray array, int i)
-		{
-			IShellItem result;
 			uint index = (uint)i;
-			array.GetItemAt( index, out result );
-			return result;
+			HResult hr = array.GetItemAt( index, out IShellItem result );
+			if( hr == HResult.Ok )
+			{
+				return result;
+			}
+			else
+			{
+				return null;
+			}
 		}
 
-		public static void SetFilters(IFileDialog dialog, IReadOnlyCollection<Filter> filters, Int32 selectedFilterZeroBasedIndex)
+		/// <summary>Sets the file extension filters on <paramref name="dialog"/>.</summary>
+		/// <param name="dialog">Required. Cannot be <see langword="null"/>.</param>
+		/// <param name="filters">If this is <see langword="null"/> or empty, then this method returns immediately (i.e. it does nothing).</param>
+		/// <param name="selectedFilterZeroBasedIndex">0-based index of the filter in in <paramref name="filters"/> to use. If this value is out-of-range then this method does nothing.</param>
+		public static void SetFilters(IFileDialog dialog, IReadOnlyCollection<Filter>? filters, Int32 selectedFilterZeroBasedIndex)
 		{
+			if( dialog is null ) throw new ArgumentNullException( nameof( dialog ) );
+
 			if( filters == null || filters.Count == 0 ) return;
 
 			FilterSpec[] specs = Utility.CreateFilterSpec( filters );
@@ -100,6 +109,73 @@ namespace ShellFileDialogs
 				i++;
 			}
 			return specs;
+		}
+
+//		/// <summary>Returns <see langword="false"/> if the user cancelled-out of the dialog. Returns <see langword="true"/> if the user completed the dialog. All other cases result in a thrown <see cref="Win32Exception"/> or <see cref="ExternalException"/> depending on the HRESULT returned from <see cref="IModalWindow.Show(IntPtr)"/>.</summary>
+//		public static Boolean ShowDialogOrThrow<TModalWindow>( this IModalWindow dialog, IntPtr parentHWnd )
+//			where TModalWindow : IModalWindow
+//		{
+//			HResult hresult = dialog.Show( parentHWnd );
+//			return ShowDialogOrThrow( hresult );
+//		}
+//
+//		// Curious - this gives me runtime errors when calling `Show` on `IModalWindow` directly.
+//		public static Boolean ShowDialogOrThrow( this IModalWindow dialog, IntPtr parentHWnd )
+//		{
+//			HResult hresult = dialog.Show( parentHWnd );
+//			return ShowDialogOrThrow( hresult );
+//		}
+
+		/// <summary>Returns <see langword="false"/> if the user cancelled-out of the dialog. Returns <see langword="true"/> if the user completed the dialog. All other cases result in a thrown <see cref="Win32Exception"/> or <see cref="ExternalException"/> depending on the HRESULT returned from <see cref="IModalWindow.Show(IntPtr)"/>.</summary>
+		public static Boolean ValidateDialogShowHResult( this HResult dialogHResult )
+		{
+			if( dialogHResult.TryGetWin32ErrorCode( out Win32ErrorCodes win32Code ) )
+			{
+				if( win32Code == Win32ErrorCodes.Success )
+				{
+					// OK.
+					return true;
+				}
+				else if( win32Code == Win32ErrorCodes.ErrorCancelled )
+				{
+					// Cancelled
+					return false;
+				}
+				else
+				{
+					// Other Win32 error:
+					
+					String msg = String.Format( CultureInfo.CurrentCulture, "Unexpected Win32 error code 0x{0:X2} in HRESULT 0x{1:X4} returned from IModalWindow.Show(...).", (Int32)win32Code, (Int32)dialogHResult );
+					throw new Win32Exception( error: (Int32)win32Code, message: msg );
+				}
+			}
+			else if( dialogHResult.IsValidHResult() )
+			{
+				const UInt16 RPC_E_SERVERFAULT = 0x0105;
+
+				if( dialogHResult.GetFacility() == HResultFacility.Rpc && dialogHResult.GetCode() == RPC_E_SERVERFAULT )
+				{
+					// This error happens when calling `IModalWindow.Show` instead of using the `Show` method on a different interface, like `IFileOpenDialog.Show`.
+					String msg = String.Format( CultureInfo.CurrentCulture, "Unexpected RPC HRESULT: 0x{0:X4} (RPC Error {1:X2}) returned from IModalWindow.Show(...). This particular RPC error suggests the dialog was accessed via the wrong COM interface.", (Int32)dialogHResult, RPC_E_SERVERFAULT );
+					throw new ExternalException( msg, errorCode: (Int32)dialogHResult );
+				}
+				else
+				{
+					// Fall-through to below:
+				}
+			}
+			else
+			{
+				// Fall-through to below:
+			}
+
+			{
+				// Other HRESULT (non-Win32 error):
+				// https://stackoverflow.com/questions/11158379/how-can-i-throw-an-exception-with-a-certain-hresult
+
+				String msg = String.Format( CultureInfo.CurrentCulture, "Unexpected HRESULT: 0x{0:X4} returned from IModalWindow.Show(...).", (Int32)dialogHResult );
+				throw new ExternalException( msg, errorCode: (Int32)dialogHResult );
+			}
 		}
 	}
 
