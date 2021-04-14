@@ -21,6 +21,7 @@
 		<RepositoryUrl>https://github.com/Jehoel/ShellFileDialogs</RepositoryUrl>
 		<PackageReleaseNotes>1.0.0 - Never released.
 1.1.0 - Initial release as a NuGet package.</PackageReleaseNotes>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     </PropertyGroup>
 	
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -30,5 +31,12 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Include="..\LICENSE.txt">
+	    <Pack>True</Pack>
+	    <PackagePath></PackagePath>
+	  </None>
+	</ItemGroup>
 	
 </Project>

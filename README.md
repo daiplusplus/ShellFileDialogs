@@ -8,6 +8,27 @@ This is handled for you by the Microsoft Windows API Code Pack - you'll need bot
 
 Whereas this assembly is only 32KB and will only be about the shell dialogs - not any of the new shell and platform features. You can also copy + paste the raw files into your own projects.
 
+## NuGet
+
+This library is available in two forms on NuGet:
+
+### `Jehoel.ShellFileDialogs`
+
+This is a normal NuGet package that includes separate assembly DLLs (with PDBs and XML documentation) for:
+ * .NET Framework 4.8
+ * .NET Standard 2.0
+ * .NET Core 3.1 (including C# 8.0 nullable reference type annotations)
+
+### `Jehoel.ShellFileDialogs.Content`
+
+This NuGet package includes `ShellFileDialogs` as C# source files that are added to your project as content files. However the behaviour is very different depending on your project configuration:
+
+* If you're using SDK-style projects or `<PackageReference>` with non-SDK-style projects...
+    * ...then the `ShellFileDialogs` C# source content files are never added to your project directly, instead they're added during build-time. Note that you cannot (easily) modify the files directly yourself. This is how NuGet now handles package content files (i.e. as immutable content).
+* If you're using old-style `package.config`...
+    * ...then the C# source files are added to a new subdirectory of your project called `ShellFileDialogs` where you can edit the files as you wish, though re-installing this NuGet package will overwrite your changes.
+
+
 ## Usage
 
 The API is intentionally simple. It can be safely used from any context: Console, WPF, or WinForms. The `ShowDialog` methods all accept an `IntPtr hWnd` of the parent window. You can also specify `IntPtr.Zero` when there is no parent window.

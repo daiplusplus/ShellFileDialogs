@@ -8,6 +8,7 @@
         <version>1.1.0</version>
         <description>Unlike the &quot;Jehoel.ShellFileDialogs&quot; package which adds an assembly reference, this package works by adding the ShellFileDialogs COM interface types and wrapper classes directly to your project in source-form.</description>
         <authors>Microsoft Corp; Dai Rees</authors>
+		<license type="file">LICENSE.txt</license>
 		
 		<developmentDependency>true</developmentDependency><!-- Because compiled-in content files preclude this being a transitive dependency. -->
 		
@@ -20,6 +21,8 @@
 		</contentFiles>
     </metadata>
     <files>
+		<file src="..\LICENSE.txt" target="" />
+		
 		<!-- For packages.config consumers: -->
 		<file src="..\ShellFileDialogs\*.cs"                   target="content\ShellFileDialogs"                   />
 		<file src="..\ShellFileDialogs\Dialogs\*.cs"           target="content\ShellFileDialogs\Dialogs"           />
