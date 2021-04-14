@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellFileDialogs", "ShellFileDialogs.csproj", "{41C033D4-51EC-4DAB-B9A9-7CA77F198662}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellFileDialogs", "ShellFileDialogs\ShellFileDialogs.csproj", "{41C033D4-51EC-4DAB-B9A9-7CA77F198662}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellFileDialogs.Demo", "ShellFileDialogs.Demo\ShellFileDialogs.Demo.csproj", "{554E27C3-1F98-42EC-B079-0ECA0D77E4C8}"
 EndProject
