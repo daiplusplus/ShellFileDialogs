@@ -5,7 +5,7 @@
     <metadata>
         <!-- Required elements-->
         <id>Jehoel.ShellFileDialogs.Content</id>
-        <version>1.1.0</version>
+        <version>1.2.0</version>
         <description>Unlike the &quot;Jehoel.ShellFileDialogs&quot; package which adds an assembly reference, this package works by adding the ShellFileDialogs COM interface types and wrapper classes directly to your project in source-form.</description>
         <authors>Microsoft Corp; Dai Rees</authors>
 		<license type="file">LICENSE.txt</license>

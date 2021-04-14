@@ -16,11 +16,12 @@
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<Nullable>enable</Nullable>
 		<AssemblyOriginatorKeyFile>StrongName256.pfx</AssemblyOriginatorKeyFile>
-		<Version>1.1.0</Version>
+		<Version>1.2.0</Version>
 		<Copyright>Microsoft Corp.</Copyright>
 		<RepositoryUrl>https://github.com/Jehoel/ShellFileDialogs</RepositoryUrl>
 		<PackageReleaseNotes>1.0.0 - Never released.
-1.1.0 - Initial release as a NuGet package.</PackageReleaseNotes>
+1.1.0 - Never released.
+1.2.0 - Initial release as a NuGet package.</PackageReleaseNotes>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     </PropertyGroup>
 	
