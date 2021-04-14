@@ -7,7 +7,11 @@ namespace ShellFileDialogs
 	public static class FolderBrowserDialog
 	{
 		/// <summary>Shows the folder browser dialog. Returns <see langword="null"/> if the user cancelled the dialog. Otherwise returns the selected path.</summary>
+#if NETCOREAPP3_1_OR_GREATER
 		public static String? ShowDialog(IntPtr parentHWnd, String? title, String? initialDirectory)
+#else
+		public static String ShowDialog(IntPtr parentHWnd, String title, String initialDirectory)
+#endif
 		{
 			NativeFileOpenDialog nfod = new NativeFileOpenDialog();
 			try
@@ -20,7 +24,11 @@ namespace ShellFileDialogs
 			}
 		}
 
+#if NETCOREAPP3_1_OR_GREATER
 		private static String? ShowDialogInner(IFileOpenDialog dialog, IntPtr parentHWnd, String? title, String? initialDirectory)
+#else
+		private static String ShowDialogInner(IFileOpenDialog dialog, IntPtr parentHWnd, String title, String initialDirectory)
+#endif
 		{
 			//IFileDialog ifd = dialog;
 			FileOpenOptions flags =
@@ -38,7 +46,11 @@ namespace ShellFileDialogs
 
 			if( initialDirectory != null )
 			{
+#if NETCOREAPP3_1_OR_GREATER
 				IShellItem2? initialDirectoryShellItem = Utility.ParseShellItem2Name( initialDirectory );
+#else
+				IShellItem2 initialDirectoryShellItem = Utility.ParseShellItem2Name( initialDirectory );
+#endif
 				if( initialDirectoryShellItem != null )
 				{
 					dialog.SetFolder( initialDirectoryShellItem );
@@ -52,7 +64,11 @@ namespace ShellFileDialogs
 			{
 				dialog.GetResults( out IShellItemArray resultsArray );
 
+#if NETCOREAPP3_1_OR_GREATER
 				IReadOnlyList<String?> fileNames = Utility.GetFileNames( resultsArray );
+#else
+				IReadOnlyList<String> fileNames = Utility.GetFileNames( resultsArray );
+#endif
 				if( fileNames.Count == 0 )
 				{
 					return null;

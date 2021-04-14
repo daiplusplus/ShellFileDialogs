@@ -10,7 +10,11 @@ namespace ShellFileDialogs
 	{
 		/// <summary>Shows the file-save dialog. Returns <see langword="null"/> if the user canceled the dialog - otherwise returns the user-selected path.</summary>
 		/// <param name="selectedFilterZeroBasedIndex">0-based index of the filter to select. Use <c>-1</c> to indicate no default selection.</param>
+#if NETCOREAPP3_1_OR_GREATER
 		public static String? ShowDialog(IntPtr parentHWnd, String? title, String? initialDirectory, String? defaultFileName, IReadOnlyCollection<Filter>? filters, Int32 selectedFilterZeroBasedIndex = -1)
+#else
+		public static String ShowDialog(IntPtr parentHWnd, String title, String initialDirectory, String defaultFileName, IReadOnlyCollection<Filter> filters, Int32 selectedFilterZeroBasedIndex = -1)
+#endif
 		{
 			NativeFileSaveDialog nfod = new NativeFileSaveDialog();
 			try
@@ -23,7 +27,11 @@ namespace ShellFileDialogs
 			}
 		}
 
+#if NETCOREAPP3_1_OR_GREATER
 		private static String? ShowDialogInner(IFileSaveDialog dialog, IntPtr parentHWnd, String? title, String? initialDirectory, String? defaultFileName, IReadOnlyCollection<Filter>? filters, Int32 selectedFilterZeroBasedIndex = -1)
+#else
+		private static String ShowDialogInner(IFileSaveDialog dialog, IntPtr parentHWnd, String title, String initialDirectory, String defaultFileName, IReadOnlyCollection<Filter> filters, Int32 selectedFilterZeroBasedIndex = -1)
+#endif
 		{
 			FileOpenOptions flags =
 				FileOpenOptions.NoTestFileCreate |
@@ -40,7 +48,11 @@ namespace ShellFileDialogs
 
 			if( initialDirectory != null )
 			{
+#if NETCOREAPP3_1_OR_GREATER
 				IShellItem2? initialDirectoryShellItem = Utility.ParseShellItem2Name( initialDirectory );
+#else
+				IShellItem2 initialDirectoryShellItem = Utility.ParseShellItem2Name( initialDirectory );
+#endif
 				if( initialDirectoryShellItem != null )
 				{
 					dialog.SetFolder( initialDirectoryShellItem );

@@ -47,7 +47,11 @@ namespace ShellFileDialogs
 		public IReadOnlyList<String> Extensions { get; }
 
 		/// <summary>Returns <see langword="null"/> if the string couldn't be parsed.</summary>
+#if NETCOREAPP3_1_OR_GREATER
 		public static IReadOnlyList<Filter>? ParseWindowsFormsFilter(String filter)
+#else
+		public static IReadOnlyList<Filter> ParseWindowsFormsFilter(String filter)
+#endif
 		{
 			// https://msdn.microsoft.com/en-us/library/system.windows.forms.filedialog.filter(v=vs.110).aspx
 			if( String.IsNullOrWhiteSpace( filter ) ) return null;

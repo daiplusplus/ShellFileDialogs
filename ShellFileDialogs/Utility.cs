@@ -21,9 +21,13 @@ namespace ShellFileDialogs
 
 				for( int i = 0; i < count; i++ )
 				{
+#if NETCOREAPP3_1_OR_GREATER
 					IShellItem? shellItem = Utility.GetShellItemAt( items, i );
-
 					String? fileName = Utility.GetFileNameFromShellItem( shellItem );
+#else
+					IShellItem shellItem = Utility.GetShellItemAt( items, i );
+					String fileName = Utility.GetFileNameFromShellItem( shellItem );
+#endif
 					if( fileName != null )
 					{
 						list.Add( fileName );
@@ -36,7 +40,11 @@ namespace ShellFileDialogs
 
 		private static readonly Guid _ishellItem2Guid = new Guid( ShellIIDGuid.IShellItem2 );
 
+#if NETCOREAPP3_1_OR_GREATER
 		public static IShellItem2? ParseShellItem2Name( String value )
+#else
+		public static IShellItem2 ParseShellItem2Name( String value )
+#endif
 		{
 			Guid ishellItem2GuidCopy = _ishellItem2Guid;
 
@@ -52,7 +60,11 @@ namespace ShellFileDialogs
 			}
 		}
 
+#if NETCOREAPP3_1_OR_GREATER
 		public static String? GetFileNameFromShellItem(IShellItem? item)
+#else
+		public static String GetFileNameFromShellItem(IShellItem item)
+#endif
 		{
 			if( item is null )
 			{
@@ -63,7 +75,11 @@ namespace ShellFileDialogs
 				HResult hr = item.GetDisplayName( ShellItemDesignNameOptions.DesktopAbsoluteParsing, out IntPtr pszString );
 				if( hr == HResult.Ok && pszString != IntPtr.Zero )
 				{
+#if NETCOREAPP3_1_OR_GREATER
 					String fileName = Marshal.PtrToStringAuto( pszString )!; // `PtrToStringAuto` won't return `null` if its `ptr` argument is not null, which we check for.
+#else
+					String fileName = Marshal.PtrToStringAuto( pszString );
+#endif
 					Marshal.FreeCoTaskMem( pszString );
 					return fileName;
 				}
@@ -74,10 +90,15 @@ namespace ShellFileDialogs
 			}
 		}
 
+#if NETCOREAPP3_1_OR_GREATER
 		public static IShellItem? GetShellItemAt(IShellItemArray array, int i)
+#else
+		public static IShellItem GetShellItemAt(IShellItemArray array, int i)
+#endif
 		{
-			uint index = (uint)i;
-			HResult hr = array.GetItemAt( index, out IShellItem result );
+			if( array is null ) throw new ArgumentNullException( nameof( array ) );
+
+			HResult hr = array.GetItemAt( (UInt32)i, out IShellItem result );
 			if( hr == HResult.Ok )
 			{
 				return result;
@@ -92,7 +113,11 @@ namespace ShellFileDialogs
 		/// <param name="dialog">Required. Cannot be <see langword="null"/>.</param>
 		/// <param name="filters">If this is <see langword="null"/> or empty, then this method returns immediately (i.e. it does nothing).</param>
 		/// <param name="selectedFilterZeroBasedIndex">0-based index of the filter in in <paramref name="filters"/> to use. If this value is out-of-range then this method does nothing.</param>
+#if NETCOREAPP3_1_OR_GREATER
 		public static void SetFilters(IFileDialog dialog, IReadOnlyCollection<Filter>? filters, Int32 selectedFilterZeroBasedIndex)
+#else
+		public static void SetFilters(IFileDialog dialog, IReadOnlyCollection<Filter> filters, Int32 selectedFilterZeroBasedIndex)
+#endif
 		{
 			if( dialog is null ) throw new ArgumentNullException( nameof( dialog ) );
 
