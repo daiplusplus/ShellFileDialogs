@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<!-- https://docs.microsoft.com/en-us/nuget/reference/nuspec -->
+	
+    <metadata>
+        <!-- Required elements-->
+        <id>Jehoel.ShellFileDialogs.Content</id>
+        <version>1.2.0</version>
+        <description>Unlike the &quot;Jehoel.ShellFileDialogs&quot; package which adds an assembly reference, this package works by adding the ShellFileDialogs COM interface types and wrapper classes directly to your project in source-form.</description>
+        <authors>Microsoft Corp; Dai Rees</authors>
+		<license type="file">LICENSE.txt</license>
+		
+		<developmentDependency>true</developmentDependency><!-- Because compiled-in content files preclude this being a transitive dependency. -->
+		
+		<contentFiles>
+			<!-- For <PackageReference> consumers: -->
+			<files include="..\ShellFileDialogs\*.cs"                   buildAction="Compile" />
+			<files include="..\ShellFileDialogs\Dialogs\*.cs"           buildAction="Compile" />
+			<files include="..\ShellFileDialogs\Native\*.cs"            buildAction="Compile" />
+			<files include="..\ShellFileDialogs\Native\Properties\*.cs" buildAction="Compile" />
+		</contentFiles>
+    </metadata>
+    <files>
+		<file src="..\LICENSE.txt" target="" />
+		
+		<!-- For packages.config consumers: -->
+		<file src="..\ShellFileDialogs\*.cs"                   target="content\ShellFileDialogs"                   />
+		<file src="..\ShellFileDialogs\Dialogs\*.cs"           target="content\ShellFileDialogs\Dialogs"           />
+		<file src="..\ShellFileDialogs\Native\*.cs"            target="content\ShellFileDialogs\Native"            />
+		<file src="..\ShellFileDialogs\Native\Properties\*.cs" target="content\ShellFileDialogs\Native\Properties" />
+	</files>
+</package>
