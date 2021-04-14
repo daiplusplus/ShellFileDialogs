@@ -1,94 +1,26 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{41C033D4-51EC-4DAB-B9A9-7CA77F198662}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>ShellFileDialogs</RootNamespace>
-    <AssemblyName>ShellFileDialogs</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>ShellFileDialogsKey.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="FileSaveDialog.cs" />
-    <Compile Include="FileOpenDialog.cs" />
-    <Compile Include="FolderBrowserDialog.cs" />
-    <Compile Include="Native\Enums.cs" />
-    <Compile Include="Native\FileOpenDialogRCW.cs" />
-    <Compile Include="Native\FileSaveDialogRCW.cs" />
-    <Compile Include="Native\Filter.cs" />
-    <Compile Include="Native\FilterSpec.cs" />
-    <Compile Include="Native\Identifiers.cs" />
-    <Compile Include="Native\IEnumIdList.cs" />
-    <Compile Include="Native\IFileDialog.cs" />
-    <Compile Include="Native\IFileDialogEvents.cs" />
-    <Compile Include="Native\IFileSaveDialog.cs" />
-    <Compile Include="Native\IFileOpenDialog.cs" />
-    <Compile Include="Native\IModalWindow.cs" />
-    <Compile Include="Native\Properties\Enums.cs" />
-    <Compile Include="Native\Properties\IPropertyDescription.cs" />
-    <Compile Include="Native\Properties\IPropertyDescriptionList.cs" />
-    <Compile Include="Native\Properties\IPropertyEnumType.cs" />
-    <Compile Include="Native\Properties\IPropertyEnumTypeList.cs" />
-    <Compile Include="Native\Properties\IPropertyStore.cs" />
-    <Compile Include="Native\IShellFolder.cs" />
-    <Compile Include="Native\IShellItem.cs" />
-    <Compile Include="Native\IShellItem2.cs" />
-    <Compile Include="Native\IShellItemArray.cs" />
-    <Compile Include="Native\NativeFileOpenDialog.cs" />
-    <Compile Include="Native\NativeFileSaveDialog.cs" />
-    <Compile Include="Native\NativeMethods.cs" />
-    <Compile Include="Native\Properties\PropertyKey.cs" />
-    <Compile Include="Native\Properties\PropVariant.cs" />
-    <Compile Include="Native\Properties\PropVariantNativeMethods.cs" />
-    <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Utility.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="README.md" />
-    <None Include="ShellFileDialogsKey.snk" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net48;netcoreapp3.1;</TargetFrameworks>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<!-- https://stackoverflow.com/a/48391188/159145 include-pdb-files-into-my-nuget-nupkg-files -->
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>1701;1702;1591;1573;1303;</NoWarn>
+		<PackageId>Jehoel.ShellFileDialogs</PackageId>
+		<Authors>Dai Rees</Authors>
+		<SignAssembly>true</SignAssembly>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+    </PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
+	</PropertyGroup>
+	
 </Project>
