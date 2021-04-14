@@ -17,6 +17,10 @@
 		<Nullable>enable</Nullable>
 		<AssemblyOriginatorKeyFile>StrongName256.pfx</AssemblyOriginatorKeyFile>
 		<Version>1.1.0</Version>
+		<Copyright>Microsoft Corp.</Copyright>
+		<RepositoryUrl>https://github.com/Jehoel/ShellFileDialogs</RepositoryUrl>
+		<PackageReleaseNotes>1.0.0 - Never released.
+1.1.0 - Initial release as a NuGet package.</PackageReleaseNotes>
     </PropertyGroup>
 	
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -26,10 +30,5 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
 	</PropertyGroup>
-
-	<ItemGroup>
-	  <Folder Include="Dialogs\" />
-	  <Folder Include="Filters\" />
-	</ItemGroup>
 	
 </Project>
