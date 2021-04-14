@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<Configurations>Debug;Release</Configurations>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <DefineConstants>TRACE;DEBUG;</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <DefineConstants>TRACE;DEBUG;</DefineConstants>
+	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Include="..\..\ShellFileDialogs.Demo\Program.cs" Link="Program.cs" />
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="Jehoel.ShellFileDialogs.Content" Version="1.2.0">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	</ItemGroup>
+</Project>
+

@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFx48Console-Content", "N
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFx48Console-PackageReference-Content", "NetFx48Console-PackageReference-Content\NetFx48Console-PackageReference-Content.csproj", "{4BD84F5B-3448-4279-BA7A-ADEC08F9E833}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreConsole-PackageReference-Content", "NetCoreConsole-PackageReference-Content\NetCoreConsole-PackageReference-Content.csproj", "{5B2342C2-E724-4C37-9F25-223E7D22FD71}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreConsole-PackageReference-Assembly", "NetCoreConsole-PackageReference-Assembly\NetCoreConsole-PackageReference-Assembly.csproj", "{FFD9010F-E143-40D9-8C8A-AAECCB74B5D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{4BD84F5B-3448-4279-BA7A-ADEC08F9E833}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BD84F5B-3448-4279-BA7A-ADEC08F9E833}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BD84F5B-3448-4279-BA7A-ADEC08F9E833}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B2342C2-E724-4C37-9F25-223E7D22FD71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B2342C2-E724-4C37-9F25-223E7D22FD71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B2342C2-E724-4C37-9F25-223E7D22FD71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B2342C2-E724-4C37-9F25-223E7D22FD71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFD9010F-E143-40D9-8C8A-AAECCB74B5D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFD9010F-E143-40D9-8C8A-AAECCB74B5D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFD9010F-E143-40D9-8C8A-AAECCB74B5D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFD9010F-E143-40D9-8C8A-AAECCB74B5D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

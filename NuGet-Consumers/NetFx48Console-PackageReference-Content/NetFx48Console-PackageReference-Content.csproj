@@ -46,19 +46,19 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Jehoel.ShellFileDialogs.Content">
-      <Version>1.2.0</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\ShellFileDialogs.Demo\Program.cs">
       <Link>Program.cs</Link>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Jehoel.ShellFileDialogs.Content" GeneratePathProperty="true">
+      <Version>1.2.0</Version>
+      <IncludeAssets>all</IncludeAssets>
+		<CopyToOutputDirectory>tools/*</CopyToOutputDirectory> <!-- https://github.com/NuGet/Home/issues/4837 -->
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
