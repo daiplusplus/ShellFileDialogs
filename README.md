@@ -19,14 +19,16 @@ This is a normal NuGet package that includes separate assembly DLLs (with PDBs a
  * .NET Standard 2.0
  * .NET Core 3.1 (including C# 8.0 nullable reference type annotations)
 
-### `Jehoel.ShellFileDialogs.Content`
+### <del>`Jehoel.ShellFileDialogs.Content`</del>
 
-This NuGet package includes `ShellFileDialogs` as C# source files that are added to your project as content files. However the behaviour is very different depending on your project configuration:
+(This package (`Jehoel.ShellFileDialogs.Content`) is not currently published as I'm having trouble getting NuGet to work as-intended)
 
-* If you're using SDK-style projects or `<PackageReference>` with non-SDK-style projects...
-    * ...then the `ShellFileDialogs` C# source content files are never added to your project directly, instead they're added during build-time. Note that you cannot (easily) modify the files directly yourself. This is how NuGet now handles package content files (i.e. as immutable content).
-* If you're using old-style `package.config`...
-    * ...then the C# source files are added to a new subdirectory of your project called `ShellFileDialogs` where you can edit the files as you wish, though re-installing this NuGet package will overwrite your changes.
+<del>This NuGet package includes `ShellFileDialogs` as C# source files that are added to your project as content files. However the behaviour is very different depending on your project configuration:</del>
+
+* <del>If you're using SDK-style projects or `<PackageReference>` with non-SDK-style projects...</del>
+    * <del>...then the `ShellFileDialogs` C# source content files are never added to your project directly, instead they're added during build-time. Note that you cannot (easily) modify the files directly yourself. This is how NuGet now handles package content files (i.e. as immutable content).</del>
+* <del>If you're using old-style `package.config`...</del>
+    * <del>...then the C# source files are added to a new subdirectory of your project called `ShellFileDialogs` where you can edit the files as you wish, though re-installing this NuGet package will overwrite your changes.</del>
 
 
 ## Usage
