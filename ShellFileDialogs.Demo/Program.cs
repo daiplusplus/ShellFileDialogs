@@ -9,15 +9,35 @@ namespace ShellFileDialogs.Demo
 		[STAThread] // <-- " If the attribute is not present, the application uses the multithreaded apartment model, which is not supported for Windows Forms."
 		public static Int32 Main( String[] args )
 		{
-			Console.WriteLine( "Now showing a folder browser dialog. Press [Enter] to continue." );
+			Console.WriteLine( "Now showing a folder browser dialog to select a single folder. Press [Enter] to continue." );
 			_ = Console.ReadLine();
 
 			// FolderBrowserDialog
 			{
-				String selectedDirectory = FolderBrowserDialog.ShowDialog( parentHWnd: IntPtr.Zero, title: "Select a folder...", initialDirectory: null );
+				String selectedDirectory = FolderBrowserDialog.ShowSingleSelectDialog( parentHWnd: IntPtr.Zero, title: "Select a folder...", initialDirectory: null );
 				if( selectedDirectory != null )
 				{
 					Console.WriteLine( "Folder browser. Selected directory: \"{0}\".", selectedDirectory );
+				}
+				else
+				{
+					Console.WriteLine( "Folder browser. Cancelled." );
+				}
+			}
+
+			Console.WriteLine( "Now showing a folder browser dialog to select multiple folders. Press [Enter] to continue.");
+			_ = Console.ReadLine();
+
+			// FolderBrowserDialog
+			{
+				IReadOnlyList<String> selectedDirectories = FolderBrowserDialog.ShowMultiSelectDialog( parentHWnd: IntPtr.Zero, title: "Select multiple folders...", initialDirectory: null );
+				if ( selectedDirectories != null )
+				{
+					Console.WriteLine( "Folder browser. Selected directories:" );
+					foreach ( String directory in selectedDirectories )
+					{
+						Console.WriteLine( directory );
+					}
 				}
 				else
 				{

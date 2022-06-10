@@ -151,6 +151,10 @@ namespace ShellFileDialogs
 							return true;
 						}
 					}
+					if(0 <= hr)
+                    {
+						return true;
+                    }
 				}
 			}
 

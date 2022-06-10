@@ -4,85 +4,109 @@ using System.Runtime.InteropServices;
 
 namespace ShellFileDialogs
 {
-	public static class FolderBrowserDialog
-	{
-		/// <summary>Shows the folder browser dialog. Returns <see langword="null"/> if the user cancelled the dialog. Otherwise returns the selected path.</summary>
+    public static class FolderBrowserDialog
+    {
+        /// <summary>Shows the folder browser dialog. Returns <see langword="null"/> if the user cancelled the dialog. Otherwise returns the selected path.</summary>
 #if NETCOREAPP3_1_OR_GREATER
-		public static String? ShowDialog(IntPtr parentHWnd, String? title, String? initialDirectory)
+		public static IReadOnlyList<String>? ShowMultiSelectDialog(IntPtr parentHWnd, String? title, String? initialDirectory)
 #else
-		public static String ShowDialog(IntPtr parentHWnd, String title, String initialDirectory)
+        public static IReadOnlyList<String> ShowMultiSelectDialog(IntPtr parentHWnd, String title, String initialDirectory)
 #endif
-		{
-			NativeFileOpenDialog nfod = new NativeFileOpenDialog();
-			try
-			{
-				return ShowDialogInner( nfod, parentHWnd, title, initialDirectory );
-			}
-			finally
-			{
-				_ = Marshal.ReleaseComObject( nfod );
-			}
-		}
+        {
+            return ShowDialog(parentHWnd, title, initialDirectory, FileOpenOptions.AllowMultiSelect);
+        }
+
+        /// <summary>Shows the folder browser dialog. Returns <see langword="null"/> if the user cancelled the dialog. Otherwise returns the selected path.</summary>
+#if NETCOREAPP3_1_OR_GREATER
+		public static String? ShowSingleSelectDialog(IntPtr parentHWnd, String? title, String? initialDirectory)
+#else
+        public static String ShowSingleSelectDialog(IntPtr parentHWnd, String title, String initialDirectory)
+#endif
+        {
+#if NETCOREAPP3_1_OR_GREATER
+            IReadOnlyList<String>? fileNames = ShowDialog(parentHWnd, title, initialDirectory, FileOpenOptions.None);
+#else
+            IReadOnlyList<String> fileNames = ShowDialog(parentHWnd, title, initialDirectory, FileOpenOptions.None);
+#endif
+            if (fileNames != null && fileNames.Count > 0)
+            {
+                return fileNames[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
 
 #if NETCOREAPP3_1_OR_GREATER
-		private static String? ShowDialogInner(IFileOpenDialog dialog, IntPtr parentHWnd, String? title, String? initialDirectory)
+        private static IReadOnlyList<String>? ShowDialog(IntPtr parentHWnd, String title, String initialDirectory, FileOpenOptions flags)
 #else
-		private static String ShowDialogInner(IFileOpenDialog dialog, IntPtr parentHWnd, String title, String initialDirectory)
+        private static IReadOnlyList<String> ShowDialog(IntPtr parentHWnd, String title, String initialDirectory, FileOpenOptions flags)
 #endif
-		{
-			//IFileDialog ifd = dialog;
-			FileOpenOptions flags =
-				FileOpenOptions.NoTestFileCreate |
-				FileOpenOptions.PathMustExist |
-				FileOpenOptions.PickFolders |
-				FileOpenOptions.ForceFilesystem;
+        {
+            NativeFileOpenDialog nfod = new NativeFileOpenDialog();
+            try
+            {
+                return ShowDialogInner(nfod, parentHWnd, title, initialDirectory, flags);
+            }
+            finally
+            {
+                _ = Marshal.ReleaseComObject(nfod);
+            }
+        }
 
-			dialog.SetOptions( flags );
-			
-			if( title != null )
-			{
-				dialog.SetTitle( title );
-			}
+#if NETCOREAPP3_1_OR_GREATER
+		private static IReadOnlyList<String>? ShowDialogInner(IFileOpenDialog dialog, IntPtr parentHWnd, String? title, String? initialDirectory, FileOpenOptions flags)
+#else
+        private static IReadOnlyList<String> ShowDialogInner(IFileOpenDialog dialog, IntPtr parentHWnd, String title, String initialDirectory, FileOpenOptions flags)
+#endif
+        {
+            //IFileDialog ifd = dialog;
+            flags = flags |
+               FileOpenOptions.NoTestFileCreate |
+               FileOpenOptions.PathMustExist |
+               FileOpenOptions.PickFolders |
+               FileOpenOptions.ForceFilesystem;
 
-			if( initialDirectory != null )
-			{
+            dialog.SetOptions(flags);
+
+            if (title != null)
+            {
+                dialog.SetTitle(title);
+            }
+
+            if (initialDirectory != null)
+            {
 #if NETCOREAPP3_1_OR_GREATER
 				IShellItem2? initialDirectoryShellItem = Utility.ParseShellItem2Name( initialDirectory );
 #else
-				IShellItem2 initialDirectoryShellItem = Utility.ParseShellItem2Name( initialDirectory );
+                IShellItem2 initialDirectoryShellItem = Utility.ParseShellItem2Name(initialDirectory);
 #endif
-				if( initialDirectoryShellItem != null )
-				{
-					dialog.SetFolder( initialDirectoryShellItem );
-				}
-			}
+                if (initialDirectoryShellItem != null)
+                {
+                    dialog.SetFolder(initialDirectoryShellItem);
+                }
+            }
 
-			//
+            //
 
-			HResult hr = dialog.Show( parentHWnd );
-			if( hr.ValidateDialogShowHResult() )
-			{
-				dialog.GetResults( out IShellItemArray resultsArray );
+            HResult hr = dialog.Show(parentHWnd);
+            if (hr.ValidateDialogShowHResult())
+            {
+                dialog.GetResults(out IShellItemArray resultsArray);
 
 #if NETCOREAPP3_1_OR_GREATER
 				IReadOnlyList<String?> fileNames = Utility.GetFileNames( resultsArray );
 #else
-				IReadOnlyList<String> fileNames = Utility.GetFileNames( resultsArray );
+                IReadOnlyList<String> fileNames = Utility.GetFileNames(resultsArray);
 #endif
-				if( fileNames.Count == 0 )
-				{
-					return null;
-				}
-				else
-				{
-					return fileNames[0];
-				}
-			}
-			else
-			{
-				// User cancelled.
-				return null;
-			}
-		}
-	}
+                return fileNames;
+            }
+            else
+            {
+                // User cancelled.
+                return null;
+            }
+        }
+    }
 }
